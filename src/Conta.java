@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Conta {
 
     private int numero;
@@ -16,16 +14,22 @@ public class Conta {
         this.titular = titular;
     }
 
-    public void pagamento(){
-
+    public void realizarPagamento(){
     }
 
-    public void debito(){
-
+    //Verifica se a conta em que o usuario está tentando pagar é válida
+    public double pagamento(double valorPagamento){
+        this.setSaldo(this.getSaldo() - valorPagamento);
+        return this.saldo;
     }
 
-    public void saldo(){
+    public double credito(double valorCreditado){
+        this.setSaldo(this.getSaldo() + valorCreditado);
+        return this.saldo;
+    }
 
+    public String saldo(){
+        return "O saldo atual é R$ " + this.saldo;
     }
 
     public int getNumero() {
@@ -35,4 +39,29 @@ public class Conta {
     public String getSenha() {
         return senha;
     }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public int getQuantidadeTransacoes() {
+        return quantidadeTransacoes;
+    }
+
+    public void setQuantidadeTransacoes(int quantidadeTransacoes) {
+        this.setQuantidadeTransacoes(this.getQuantidadeTransacoes() + 1);
+    }
+
+    public String menu() {
+        return "Digite a operação desejada\n" +
+                "1- Pagamento;\n" +
+                "2- Crédito;\n" +
+                "3- Ver saldo\n";
+    }
+
+
 }

@@ -5,7 +5,13 @@ public class Poupanca extends Conta{
         super(numero, senha, saldo, quantidadeTransacoes, titular);
     }
 
-    public void saque(){
+    public double saque(double valorSaque){
+        this.setSaldo(this.getSaldo() - valorSaque);
+        return getSaldo();
+    }
 
+    @Override
+    public String menu() {
+        return super.menu() + "4 - Saque";
     }
 }

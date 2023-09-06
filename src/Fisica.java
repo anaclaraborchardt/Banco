@@ -5,4 +5,6 @@ public class Fisica extends Pessoa{
 
     public Fisica(long cpf, String nomeCompleto) {
     }
+
+
 }

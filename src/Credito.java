@@ -6,4 +6,5 @@ public class Credito extends Conta {
     public Credito(int numero, String senha, double saldo, int quantidadeTransacoes, Pessoa titular) {
         super(numero, senha, saldo, quantidadeTransacoes, titular);
     }
+
 }
