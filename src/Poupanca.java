@@ -12,6 +12,6 @@ public class Poupanca extends Conta{
 
     @Override
     public String menu() {
-        return super.menu() + "4 - Saque";
+        return super.menu() + "4- Saque";
     }
 }

@@ -1,35 +1,30 @@
 public class Corrente extends Conta{
-
-    private final int quantidadeTransacoes;
     private double limite;
 
     public Corrente(int numero, String senha, double saldo, int quantidadeTransacoes, Pessoa titular) {
         super(numero, senha, saldo, quantidadeTransacoes, titular);
-        this.quantidadeTransacoes = quantidadeTransacoes;
     }
 
-    public double saque(double valorSaque){
-        this.setSaldo(this.getSaldo() - valorSaque);
-        return getSaldo();
-    }
-
-    public String transferencia(int numeroRecebedora, double valorTransferencia){
-        Conta contaRecebedora;
-        for(Conta conta : Main.banco.getContas()) {
-            if (numeroRecebedora == conta.getNumero()){
-                contaRecebedora = Main.banco.getContas().get(numeroRecebedora);
-                contaRecebedora.setSaldo(contaRecebedora.getSaldo() + valorTransferencia);
-                Main.contaLogada.setSaldo(Main.contaLogada.getSaldo() - valorTransferencia);
-                return "Seu novo saldo é ";
-
-            }
+    public String saque(double valorSaque){
+        double novoSaldo = this.getSaldo() - valorSaque;
+        if(novoSaldo<0){
+            return "Saldo insuficiente";
         }
-        return "A conta não existe";
+        this.setSaldo(this.getSaldo() - valorSaque);
+        return "getSaldo()";
+    }
+
+    public double transferencia(Conta contaRecebedora, double valorTransferencia){
+                Main.contaLogada.setSaldo(Main.contaLogada.getSaldo() - valorTransferencia);
+                contaRecebedora.setSaldo(contaRecebedora.getSaldo() + valorTransferencia);
+
+                return Main.contaLogada.getSaldo();
     }
 
     @Override
     public String menu() {
-        return super.menu() + "4- Saque; 5- Transferência";
+        return super.menu() + "4- Saque;" +
+                "\n 5- Transferência";
     }
 
 }

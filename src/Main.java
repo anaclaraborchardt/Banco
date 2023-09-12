@@ -7,48 +7,43 @@ public class Main {
     static Conta contaLogada;
 
     public static void main(String[] args) {
-        banco.cadastroConta();
+        System.out.println("Bem vindo ao Banco");
         dadosConta();
-
     }
 
     public static void dadosConta(){
-        boolean numeroValido = false;
-        boolean senhaValida = false;
+        System.out.println(banco.getContas());
         do {
+
+            //Solicita ao usuário o número e a senha da conta
             System.out.println("Insira o número da conta");
             int numero = sc.nextInt();
             System.out.println("Insira a senha");
             String senha = sc.next();
-            for(Conta conta : banco.getContas()) {
-                if (numero == conta.getNumero()) {
-                    System.out.println("Número válido");
-                    numeroValido = true;
-                }
-                    if (senha.equals(conta.getSenha())) {
-                        System.out.println("Senha válida");
-                        senhaValida = true;
-                }
-                if(senhaValida && numeroValido){
-                    contaLogada = conta;
-                }
-            }
-        } while (!numeroValido && !senhaValida) ;
-            menu();
+
+                    //variável para buscar a conta
+                    Conta validaConta = banco.buscaConta(numero, senha);
+
+                    //se o retorno for uma conta, ou seja, diferente de nulo,
+                    //ele atribui a conta logada à conta que foi encontrada
+                    if (validaConta != null) {
+                        contaLogada = validaConta;
+                    }
+
+        } while (contaLogada == null);
+        menu();
     }
 
     public static void menu(){
-        System.out.println("Bem vindo Usuário!\n");
+        System.out.println("Bem vindo " + contaLogada.getTitular() + "!");
         System.out.println(contaLogada);
+        System.out.println(contaLogada.getQuantidadeTransacoes());
+
         int opcao;
             do{
-                System.out.println("Digite a operação desejada\n" +
-                "1- Pagamento;\n" +
-                "2- Crédito;\n" +
-                "3- Ver saldo;\n" +
-                "4- Transferência;\n" +
-                "5- Saque\n" +
-                "6- Sair\n");
+                System.out.println("Digite a operação desejada");
+                //Pegando o menu das classes, ele vai retornar as opções que cada classe tem
+                System.out.println(contaLogada.menu());
                 opcao = sc.nextInt();
 
         switch(opcao) {
@@ -59,13 +54,14 @@ public class Main {
             case 5 -> saque();
             case 6 -> System.exit(0);
             }
+            quantidadeTransacoes();
         }while(opcao != 6);
     }
 
     private static void credito(){
         System.out.println("Digite o valor a ser depositado ");
         double valorCreditado = sc.nextDouble();
-//        implementaTaxaServico();
+        contaLogada.setQuantidadeTransacoes();
 
         System.out.println("Você creditou " + valorCreditado);
         System.out.println("\nSeu saldo agora é R$ " + contaLogada.credito(valorCreditado));
@@ -74,7 +70,7 @@ public class Main {
     private static void pagamento(){
         System.out.println("Digite o valor a ser pago: ");
         double valorPagamento = sc.nextDouble();
-//        implementaTaxaServico();
+        contaLogada.setQuantidadeTransacoes();
 
         System.out.println("Você pagou " + valorPagamento);
         System.out.println("\nSeu saldo agora é R$ " + contaLogada.pagamento(valorPagamento));
@@ -84,10 +80,17 @@ public class Main {
         if(contaLogada instanceof Corrente){
             System.out.println("Digite o valor a ser transferido: ");
             double valorTransferencia = sc.nextDouble();
-//            implementaTaxaServico();
             System.out.println("Digite o número da conta que deseja transferir");
-//            System.out.println("\nSeu saldo agora é R$ " + contaLogada.transferencia(numeroRecebedora, valorTransferencia));
-        }else {
+            int numeroRecebedora = sc.nextInt();
+            if(banco.buscaContaRecebedora(numeroRecebedora) != null) {
+                Conta contaRecebedora;
+                contaRecebedora = banco.buscaContaRecebedora(numeroRecebedora);
+                contaLogada.setQuantidadeTransacoes();
+                System.out.println("\nSeu saldo agora é R$ " + ((Corrente) contaLogada).transferencia(contaRecebedora, valorTransferencia));
+            }else{
+                System.out.println("Conta não encontrada");
+            }
+            }else {
             System.out.println("Sua conta não é corrente");
         }
     }
@@ -97,21 +100,28 @@ public class Main {
                 || contaLogada instanceof Poupanca){
             System.out.println("Digite o valor que deseja sacar: ");
             double valorSaque = sc.nextDouble();
-//            implementaTaxaServico();
-//            System.out.println("\nSeu saldo agora é R$ " + contaLogada.saque(numeroRecebedora, valorTransferencia));
+            contaLogada.setQuantidadeTransacoes();
+            if(contaLogada instanceof Corrente) {
+                System.out.println("\nSeu saldo agora é R$ " + ((Corrente) contaLogada).saque(valorSaque));
+            }else{
+                System.out.println("\nSeu saldo agora é R$ " + ((Poupanca) contaLogada).saque(valorSaque));
+            }
 
         }else {
-            System.out.println("Sua conta não é corrente");
+            System.out.println("Sua conta não é corrente, nem poupança");
         }
     }
 
-//    private static void implementaTaxaServico() {
-//        contaLogada.setQuantidadeTransacoes(contaLogada.getQuantidadeTransacoes());
-//        if (contaLogada.getQuantidadeTransacoes() == 3) {
-//            contaLogada.setSaldo(contaLogada.getSaldo() - (banco.getTaxaDeServico() * contaLogada.getSaldo()));
-//            System.out.println("Será implementada uma taxa de serviço");
-//        }
-//    }
+    private static void quantidadeTransacoes() {
+        int quantidadeTransacoes = contaLogada.getQuantidadeTransacoes();
 
+        System.out.println("Você ainda pode fazer " + quantidadeTransacoes + " transações hoje sem pagar taxas");
 
+        if (quantidadeTransacoes == 0) {
+            System.out.println("Você já atingiu o limite de transações, a partir de agora será cobrado uma taxa de R$ " + banco.getTaxaDeServico());
+            double taxa = banco.getTaxaDeServico() * contaLogada.getSaldo();
+            contaLogada.setSaldo(contaLogada.getSaldo() - taxa);
+        }
+    }
 }
+

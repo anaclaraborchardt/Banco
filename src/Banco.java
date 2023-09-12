@@ -24,15 +24,15 @@ public class Banco {
 
     public void cadastroConta(){
         Poupanca poupanca = new Poupanca(345, "345", 110.00, 3,
-                new Juridica(3453453, "fvedfytew"));
+                new Juridica(3453453, "fvedfytew", "ana", "rua"));
         contas.add(poupanca);
 
-        Credito credito= new Credito(345, "345", 110.00, 3,
-                new Juridica(3453453, "fvedfytew"));
+        Credito credito= new Credito(456, "456", 110.00, 3,
+                new Juridica(3453453, "fvedfytew", "ana", "rua"));
         contas.add(credito);
 
         Corrente corrente = new Corrente(123, "123", 0.00, 5,
-                new Juridica(3453453, "fvedfytew"));
+                new Juridica(3453453, "fvedfytew", "ana", "rua"));
         contas.add(corrente);
 
     }
@@ -48,4 +48,34 @@ public class Banco {
     public double getTaxaDeServico() {
         return taxaDeServico;
     }
+
+    public Conta buscaConta(int numero, String senha){
+        boolean numeroValido = false;
+        boolean senhaValida = false;
+        for(Conta conta : contas) {
+            if (numero == conta.getNumero()) {
+                numeroValido = true;
+            }
+            if (senha.equals(conta.getSenha())) {
+                senhaValida = true;
+            }
+            if(senhaValida && numeroValido){
+                System.out.println("Conta encontrada");
+                return conta;
+            }
+        }
+        return null;
+    }
+
+    public Conta buscaContaRecebedora(int numeroRecebedora){
+        for(Conta contaRecebedora : contas) {
+            if (numeroRecebedora == contaRecebedora.getNumero()) {
+                return contaRecebedora;
+            }
+        }
+        return null;
+
+    }
+
+
 }

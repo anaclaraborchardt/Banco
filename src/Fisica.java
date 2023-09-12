@@ -1,10 +1,12 @@
-public class Fisica extends Pessoa{
+public class Fisica extends Pessoa {
 
     private long cpf;
-    private String nomeCompleto;
 
-    public Fisica(long cpf, String nomeCompleto) {
+    public Fisica(long cpf, String endereco, String nome) {
+        super(endereco, nome);
+        this.cpf = cpf;
     }
-
-
 }
+
+
+

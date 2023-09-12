@@ -13,10 +13,6 @@ public class Conta {
         this.senha = senha;
         this.titular = titular;
     }
-
-    public void realizarPagamento(){
-    }
-
     //Verifica se a conta em que o usuario está tentando pagar é válida
     public double pagamento(double valorPagamento){
         this.setSaldo(this.getSaldo() - valorPagamento);
@@ -52,15 +48,18 @@ public class Conta {
         return quantidadeTransacoes;
     }
 
-    public void setQuantidadeTransacoes(int quantidadeTransacoes) {
-        this.setQuantidadeTransacoes(this.getQuantidadeTransacoes() + 1);
+    public void setQuantidadeTransacoes() {
+        this.quantidadeTransacoes = getQuantidadeTransacoes() - 1;
     }
 
     public String menu() {
-        return "Digite a operação desejada\n" +
-                "1- Pagamento;\n" +
+        return "1- Pagamento;\n" +
                 "2- Crédito;\n" +
                 "3- Ver saldo\n";
+    }
+
+    public Pessoa getTitular() {
+        return titular;
     }
 
 
